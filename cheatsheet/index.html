@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CodeSignal Cheat Sheet</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Syne:wght@400;700;800&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d0f14;
+    --surface: #141720;
+    --surface2: #1c2030;
+    --border: #252a38;
+    --ts: #3b82f6;
+    --java: #f59e0b;
+    --green: #22c55e;
+    --purple: #a78bfa;
+    --pink: #f472b6;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --comment: #4a5568;
+  }
+
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .header h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: white;
+  }
+
+  .header p {
+    color: var(--muted);
+    margin-top: 0.4rem;
+    font-size: 0.9rem;
+  }
+
+  .tabs {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .tab {
+    padding: 0.6rem 2rem;
+    border-radius: 999px;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.02em;
+  }
+
+  .tab.ts.active { border-color: var(--ts); color: var(--ts); background: #1e293b; }
+  .tab.java.active { border-color: var(--java); color: var(--java); background: #1c1a10; }
+  .tab:hover { opacity: 0.85; }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(520px, 1fr));
+    gap: 1.2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .card-header {
+    padding: 0.75rem 1.1rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .card-header .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .ts-dot { background: var(--ts); }
+  .java-dot { background: var(--java); }
+
+  .card-header h2 {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  pre {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    line-height: 1.75;
+    padding: 1rem 1.1rem;
+    overflow-x: auto;
+    background: transparent;
+  }
+
+  .kw { color: #7dd3fc; }
+  .type { color: #a78bfa; }
+  .str { color: #86efac; }
+  .num { color: #fbbf24; }
+  .fn { color: #f472b6; }
+  .cm { color: var(--comment); font-style: italic; }
+  .op { color: #94a3b8; }
+  .cls { color: #fb923c; }
+
+  .note {
+    background: var(--surface2);
+    border-left: 3px solid var(--purple);
+    padding: 0.6rem 1rem;
+    margin: 0 1.1rem 1rem;
+    border-radius: 0 6px 6px 0;
+    font-size: 0.78rem;
+    color: #94a3b8;
+    line-height: 1.6;
+  }
+
+  .full { grid-column: 1 / -1; }
+
+  @media (max-width: 600px) {
+    .grid { grid-template-columns: 1fr; }
+    .full { grid-column: 1; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>CodeSignal Cheat Sheet</h1>
+  <p>Circle Internet Financial — Assessment Reference</p>
+</div>
+
+<div class="tabs">
+  <button class="tab ts active" onclick="show('ts')">TypeScript</button>
+  <button class="tab java" onclick="show('java')">Java</button>
+</div>
+
+<!-- TS PANEL -->
+<div class="panel active" id="ts">
+  Arrays
+  Sorting
+  Grouping & Aggregation
+  Map & Set
+  Rounding & Numbers
+  Strings
+  Stacks & Queues
+  Binary Search
+  Class Design Pattern
+  Error Handling
+  Useful Patterns
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-header"><div class="dot ts-dot"></div><h2>Arrays — Core Methods</h2></div>
+      <pre><span class="cm">// Filter</span>
+arr.<span class="fn">filter</span>(tx => tx.status === <span class="str">"completed"</span>)
+
+<span class="cm">// Map (transform)</span>
+arr.<span class="fn">map</span>(tx => tx.amount)
+
+<span class="cm">// Find first match</span>
+arr.<span class="fn">find</span>(tx => tx.id === <span class="str">"abc"</span>)  <span class="cm">// or undefined</span>
+arr.<span class="fn">findIndex</span>(tx => tx.id === <span class="str">"abc"</span>)
+
+<span class="cm">// Check any / all</span>
+arr.<span class="fn">some</span>(tx => tx.amount > <span class="num">1000</span>)
+arr.<span class="fn">every</span>(tx => tx.status === <span class="str">"completed"</span>)
+
+<span class="cm">// Reduce to single value</span>
+arr.<span class="fn">reduce</span>((sum, tx) => sum + tx.amount, <span class="num">0</span>)
+
+<span class="cm">// Flat map</span>
+arr.<span class="fn">flatMap</span>(x => x.items)</pre>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="dot ts-dot"></div><h2>Sorting</h2></div>
+      <pre><span class="cm">// Numbers ascending</span>
+arr.<span class="fn">sort</span>((a, b) => a - b)
+
+<span class="cm">// Numbers descending</span>
+arr.<span class="fn">sort</span>((a, b) => b - a)
+
+<span class="cm">// Alphabetical</span>
+arr.<span class="fn">sort</span>((a, b) => a.<span class="fn">localeCompare</span>(b))
+
+<span class="cm">// Multi-field sort (amount desc, then name asc)</span>
+arr.<span class="fn">sort</span>((a, b) => {
+  <span class="kw">if</span> (b.amount !== a.amount) <span class="kw">return</span> b.amount - a.amount
+  <span class="kw">return</span> a.name.<span class="fn">localeCompare</span>(b.name)
+})
+
+<span class="cm">// Sort objects by field</span>
+arr.<span class="fn">sort</span>((a, b) => a.timestamp - b.timestamp)</pre>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="dot ts-dot"></div><h2>Grouping & Aggregation</h2></div>
+      <pre><span class="cm">// Group into a map</span>
+<span class="kw">const</span> map: <span class="type">Record</span>&lt;<span class="type">string</span>, <span class="type">number</span>&gt; = {}
+<span class="kw">for</span> (<span class="kw">const</span> tx <span class="kw">of</span> transactions) {
+  map[tx.fromAccount] = (map[tx.fromAccount] ?? <span class="num">0</span>) + tx.amount
+}
+
+<span class="cm">// Convert map to sorted array (top N pattern)</span>
+<span class="type">Object</span>.<span class="fn">entries</span>(map)
+  .<span class="fn">map</span>(([accountId, totalSent]) => ({ accountId, totalSent }))
+  .<span class="fn">sort</span>((a, b) => b.totalSent - a.totalSent)
+  .<span class="fn">slice</span>(<span class="num">0</span>, n)
+
+<span class="cm">// Object.keys / values / entries</span>
+<span class="type">Object</span>.<span class="fn">keys</span>(map)    <span class="cm">// ["alice", "bob"]</span>
+<span class="type">Object</span>.<span class="fn">values</span>(map)  <span class="cm">// [100, 200]</span>
+<span class="type">Object</span>.<span class="fn">entries</span>(map) <span class="cm">// [["alice", 100], ...]</span></pre>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="dot ts-dot"></div><h2>Map & Set</h2></div>
+      <pre><span class="cm">// Map</span>
+<span class="kw">const</span> m = <span class="kw">new</span> <span class="type">Map</span>&lt;<span class="type">string</span>, <span class="type">number</span>&gt;()
+m.<span class="fn">set</span>(<span class="str">"alice"</span>, <span class="num">100</span>)
+m.<span class="fn">get</span>(<span class="str">"alice"</span>)        <span class="cm">// 100</span>
+m.<span class="fn">has</span>(<span class="str">"alice"</span>)        <span class="cm">// true</span>
+m.<span class="fn">delete</span>(<span class="str">"alice"</span>)
+<span class="kw">for</span> (<span class="kw">const</span> [k, v] <span class="kw">of</span> m) { ... }
+
+<span class="cm">// Set (deduplication)</span>
+<span class="kw">const</span> seen = <span class="kw">new</span> <span class="type">Set</span>&lt;<span class="type">string</span>&gt;()
+seen.<span class="fn">add</span>(<span class="str">"tx1"</span>)
+seen.<span class="fn">has</span>(<span class="str">"tx1"</span>)        <span class="cm">// true</span>
+seen.<span class="fn">delete</span>(<span class="str">"tx1"</span>)
+[...seen]                <span class="cm">// convert to array</span></pre>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="dot ts-dot"></div><h2>Rounding & Numbers</h2></div>
+      <pre><span class="cm">// Round to 2 decimal places (for math)</span>
+<span class="type">Math</span>.<span class="fn">round</span>(x * <span class="num">100</span>) / <span class="num">100</span>
+
+<span class="cm">// Round to 2 decimal places (for display — returns string)</span>
+x.<span class="fn">toFixed</span>(<span class="num">2</span>)
+
+<span class="cm">// Currency conversion (via USD as pivot)</span>
+<span class="kw">const</span> inUSD = amount / fromRate
+<span class="kw">const</span> result = inUSD * toRate
+<span class="type">Math</span>.<span class="fn">round</span>(result * <span class="num">100</span>) / <span class="num">100</span>
+
+<span class="cm">// Avoid floating point issues</span>
+<span class="num">0.1</span> + <span class="num">0.2</span> === <span class="num">0.3</span>  <span class="cm">// ❌ false in JS!</span>
+<span class="type">Math</span>.<span class="fn">round</span>((<span class="num">0.1</span> + <span class="num">0.2</span>) * <span class="num">100</span>) / <span class="num">100</span>  <span class="cm">// ✅ 0.3</span>
+
+<span class="cm">// Absolute value</span>
+<span class="type">Math</span>.<span class="fn">abs</span>(a - b)</pre>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="dot ts-dot"></div><h2>Strings</h2></div>
+      <pre><span class="cm">// CSV row</span>
+[id, from, to, amount].<span class="fn">join</span>(<span class="str">","</span>)
+
+<span class="cm">// Multiline string / report</span>
+[<span class="str">"=== REPORT ==="</span>, <span class="str">`Total: ${n}`</span>].<span class="fn">join</span>(<span class="str">"\n"</span>)
+
+<span class="cm">// Template literals</span>
+<span class="str">`Unsupported currency: ${code}`</span>
+<span class="str">`Total Volume (${currency ?? "USD"}): ${vol.toFixed(2)}`</span>
+
+<span class="cm">// String methods</span>
+str.<span class="fn">includes</span>(<span class="str">"USD"</span>)
+str.<span class="fn">startsWith</span>(<span class="str">"tx"</span>)
+str.<span class="fn">toLowerCase</span>()
+str.<span class="fn">trim</span>()
+str.<span class="fn">split</span>(<span class="str">","</span>)</pre>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="dot ts-dot"></div><h2>Stack & Queue</h2></div>
+      <pre><span class="cm">// Stack (LIFO) — use array</span>
+<span class="kw">const</span> stack: <span class="type">number</span>[] = []
+stack.<span class="fn">push</span>(<span class="num">1</span>)        <span class="cm">// add to top</span>
+stack.<span class="fn">pop</span>()          <span class="cm">// remove from top</span>
+stack.<span class="fn">at</span>(-<span class="num">1</span>)        <span class="cm">// peek top (no remove)</span>
+stack.length === <span class="num">0</span>   <span class="cm">// is empty</span>
+
+<span class="cm">// Queue (FIFO) — use array</span>
+<span class="kw">const</span> queue: <span class="type">number</span>[] = []
+queue.<span class="fn">push</span>(<span class="num">1</span>)        <span class="cm">// enqueue</span>
+queue.<span class="fn">shift</span>()        <span class="cm">// dequeue (from front)</span>
+queue[<span class="num">0</span>]             <span class="cm">// peek front</span></pre>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="dot ts-dot"></div><h2>Binary Search</h2></div>
+      <pre><span class="cm">// Array must be sorted first!</span>
+<span class="kw">function</span> <span class="fn">binarySearch</span>(arr: <span class="type">number</span>[], target: <span class="type">number</span>): <span class="type">number</span> {
+  <span class="kw">let</span> lo = <span class="num">0</span>, hi = arr.length - <span class="num">1</span>
+
+  <span class="kw">while</span> (lo <= hi) {
+    <span class="kw">const</span> mid = <span class="type">Math</span>.<span class="fn">floor</span>((lo + hi) / <span class="num">2</span>)
+    <span class="kw">if</span> (arr[mid] === target) <span class="kw">return</span> mid
+    <span class="kw">else if</span> (arr[mid] < target) lo = mid + <span class="num">1</span>
+    <span class="kw">else</span> hi = mid - <span class="num">1</span>
+  }
+
+  <span class="kw">return</span> -<span class="num">1</span>  <span class="cm">// not found</span>
+}</pre>
+    </div>
+
+    <div class="card full">
+      <div class="card-header"><div class="dot ts-dot"></div><h2>Class Design Pattern (Full Template)</h2></div>
+      <pre><span class="kw">class</span> <span class="cls">Transaction</span> {
+  id: <span class="type">string</span>
+  fromAccount: <span class="type">string</span>
+  toAccount: <span class="type">string</span>
+  amount: <span class="type">number</span>
+  currency: <span class="type">string</span>
+  status: <span class="str">"pending"</span> | <span class="str">"completed"</span> | <span class="str">"failed"</span>
+  timestamp: <span class="type">number</span>
+
+  <span class="fn">constructor</span>(id, fromAccount, toAccount, amount, currency, status, timestamp) {
+    <span class="kw">this</span>.id = id; <span class="kw">this</span>.fromAccount = fromAccount; <span class="kw">this</span>.toAccount = toAccount
+    <span class="kw">this</span>.amount = amount; <span class="kw">this</span>.currency = currency
+    <span class="kw">this</span>.status = status; <span class="kw">this</span>.timestamp = timestamp
+  }
+}
+
+<span class="kw">class</span> <span class="cls">Ledger</span> {
+  <span class="kw">private</span> transactions: <span class="cls">Transaction</span>[] = []
+  <span class="kw">private</span> converter?: <span class="cls">CurrencyConverter</span>
+
+  <span class="fn">constructor</span>(converter?: <span class="cls">CurrencyConverter</span>) {
+    <span class="kw">this</span>.converter = converter
+  }
+
+  <span class="fn">addTransaction</span>(tx: <span class="cls">Transaction</span>): <span class="type">void</span> { <span class="kw">this</span>.transactions.<span class="fn">push</span>(tx) }
+
+  <span class="fn">getTransaction</span>(id: <span class="type">string</span>): <span class="cls">Transaction</span> | <span class="type">null</span> {
+    <span class="kw">return</span> <span class="kw">this</span>.transactions.<span class="fn">find</span>(tx => tx.id === id) ?? <span class="kw">null</span>
+  }
+
+  <span class="fn">getBalance</span>(accountId: <span class="type">string</span>): <span class="type">number</span> {
+    <span class="kw">let</span> balance = <span class="num">0</span>
+    <span class="kw">for</span> (<span class="kw">const</span> tx <span class="kw">of</span> <span class="kw">this</span>.transactions) {
+      <span class="kw">if</span> (tx.status !== <span class="str">"completed"</span>) <span class="kw">continue</span>
+      <span class="kw">if</span> (tx.toAccount === accountId) balance += tx.amount
+      <span class="kw">if</span> (tx.fromAccount === accountId) balance -= tx.amount
+    }
+    <span class="kw">return</span> balance
+  }
+}</pre>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="dot ts-dot"></div><h2>Error Handling</h2></div>
+      <pre><span class="cm">// Throw meaningful errors</span>
+<span class="kw">if</span> (!<span class="kw">this</span>.converter) 
+  <span class="kw">throw new</span> <span class="cls">Error</span>(<span class="str">"No CurrencyConverter provided"</span>)
+
+<span class="kw">if</span> (!rates[currency])
+  <span class="kw">throw new</span> <span class="cls">Error</span>(<span class="str">`Unsupported currency: ${currency}`</span>)
+
+<span class="cm">// Try/catch</span>
+<span class="kw">try</span> {
+  <span class="kw">const</span> result = riskyOperation()
+} <span class="kw">catch</span> (e) {
+  console.<span class="fn">error</span>(e)
+}</pre>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="dot ts-dot"></div><h2>Useful Patterns</h2></div>
+      <pre><span class="cm">// Nullish coalescing</span>
+value ?? <span class="str">"default"</span>        <span class="cm">// if null/undefined</span>
+value || <span class="str">"default"</span>        <span class="cm">// if falsy (0 too!)</span>
+
+<span class="cm">// Optional chaining</span>
+obj?.field?.nested
+
+<span class="cm">// Spread / clone array</span>
+<span class="kw">const</span> copy = [...arr]
+
+<span class="cm">// Destructuring</span>
+<span class="kw">const</span> { id, amount } = tx
+<span class="kw">const</span> [first, ...rest] = arr
+<span class="kw">const</span> [[key, val]] = <span class="type">Object</span>.<span class="fn">entries</span>(map)
+
+<span class="cm">// Default param</span>
+<span class="kw">function</span> <span class="fn">foo</span>(options = {}) { ... }
+
+<span class="cm">// Non-null assertion (TS)</span>
+map[key]!   <span class="cm">// "I know this isn't undefined"</span></pre>
+    </div>
+
+  </div>
+</div>
+
+<!-- JAVA PANEL -->
+<div class="panel" id="java">
+  ArrayList & Array
+  Hashmap
+  Hashset
+  Stack & Queue
+  Heap (PriorityQueue)
+  TreeMap (SortedMap)
+  Sorting
+  Rounding & Numbers
+  Strings
+  Binary Search
+  Class Design Pattern
+  Streams
+  Error Handling
+  
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-header"><div class="dot java-dot"></div><h2>ArrayList & Arrays</h2></div>
+      <pre><span class="kw">import</span> java.util.*;
+
+<span class="cm">// ArrayList</span>
+<span class="type">List</span>&lt;<span class="cls">String</span>&gt; list = <span class="kw">new</span> <span class="cls">ArrayList</span>&lt;&gt;();
+list.<span class="fn">add</span>(<span class="str">"alice"</span>);
+list.<span class="fn">get</span>(<span class="num">0</span>);
+list.<span class="fn">remove</span>(<span class="num">0</span>);
+list.<span class="fn">size</span>();
+list.<span class="fn">isEmpty</span>();
+list.<span class="fn">contains</span>(<span class="str">"alice"</span>);
+
+<span class="cm">// Iterate</span>
+<span class="kw">for</span> (<span class="cls">String</span> s : list) { ... }
+
+<span class="cm">// Sort</span>
+<span class="cls">Collections</span>.<span class="fn">sort</span>(list);
+list.<span class="fn">sort</span>(<span class="cls">Comparator</span>.<span class="fn">naturalOrder</span>());
+list.<span class="fn">sort</span>((a, b) -> b.amount - a.amount);</pre>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="dot java-dot"></div><h2>HashMap</h2></div>
+      <pre><span class="type">Map</span>&lt;<span class="cls">String</span>, <span class="cls">Integer</span>&gt; map = <span class="kw">new</span> <span class="cls">HashMap</span>&lt;&gt;();
+
+map.<span class="fn">put</span>(<span class="str">"alice"</span>, <span class="num">100</span>);
+map.<span class="fn">get</span>(<span class="str">"alice"</span>);               <span class="cm">// 100</span>
+map.<span class="fn">getOrDefault</span>(<span class="str">"bob"</span>, <span class="num">0</span>);    <span class="cm">// 0 if missing ✅</span>
+map.<span class="fn">containsKey</span>(<span class="str">"alice"</span>);
+map.<span class="fn">remove</span>(<span class="str">"alice"</span>);
+map.<span class="fn">keySet</span>();
+map.<span class="fn">values</span>();
+map.<span class="fn">entrySet</span>();
+
+<span class="cm">// Grouping pattern</span>
+<span class="kw">for</span> (<span class="cls">Transaction</span> tx : transactions) {
+  map.<span class="fn">put</span>(tx.from, map.<span class="fn">getOrDefault</span>(tx.from, <span class="num">0</span>) + tx.amount);
+}
+
+<span class="cm">// Iterate entries</span>
+<span class="kw">for</span> (<span class="type">Map.Entry</span>&lt;<span class="cls">String</span>, <span class="cls">Integer</span>&gt; e : map.<span class="fn">entrySet</span>()) {
+  e.<span class="fn">getKey</span>(); e.<span class="fn">getValue</span>();
+}</pre>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="dot java-dot"></div><h2>HashSet</h2></div>
+      <pre><span class="type">Set</span>&lt;<span class="cls">String</span>&gt; seen = <span class="kw">new</span> <span class="cls">HashSet</span>&lt;&gt;();
+
+seen.<span class="fn">add</span>(<span class="str">"tx1"</span>);
+seen.<span class="fn">contains</span>(<span class="str">"tx1"</span>);     <span class="cm">// true</span>
+seen.<span class="fn">remove</span>(<span class="str">"tx1"</span>);
+seen.<span class="fn">size</span>();
+
+<span class="cm">// Deduplication pattern</span>
+<span class="kw">for</span> (<span class="cls">Transaction</span> tx : transactions) {
+  <span class="kw">if</span> (isSuspicious(tx)) {
+    seen.<span class="fn">add</span>(tx.id);     <span class="cm">// Set handles duplicates</span>
+  }
+}
+
+<span class="cm">// Convert to list</span>
+<span class="type">List</span>&lt;<span class="cls">String</span>&gt; result = <span class="kw">new</span> <span class="cls">ArrayList</span>&lt;&gt;(seen);</pre>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="dot java-dot"></div><h2>Stack & Queue</h2></div>
+      <pre><span class="cm">// Stack (LIFO)</span>
+<span class="cls">Deque</span>&lt;<span class="cls">Integer</span>&gt; stack = <span class="kw">new</span> <span class="cls">ArrayDeque</span>&lt;&gt;();
+stack.<span class="fn">push</span>(<span class="num">1</span>);          <span class="cm">// add to top</span>
+stack.<span class="fn">pop</span>();            <span class="cm">// remove from top</span>
+stack.<span class="fn">peek</span>();           <span class="cm">// view top, no remove</span>
+stack.<span class="fn">isEmpty</span>();
+
+<span class="cm">// Queue (FIFO)</span>
+<span class="cls">Queue</span>&lt;<span class="cls">Integer</span>&gt; queue = <span class="kw">new</span> <span class="cls">LinkedList</span>&lt;&gt;();
+queue.<span class="fn">offer</span>(<span class="num">1</span>);         <span class="cm">// enqueue</span>
+queue.<span class="fn">poll</span>();           <span class="cm">// dequeue</span>
+queue.<span class="fn">peek</span>();           <span class="cm">// view front</span></pre>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="dot java-dot"></div><h2>PriorityQueue (Heap)</h2></div>
+      <pre><span class="cm">// Min-heap (smallest first)</span>
+<span class="cls">PriorityQueue</span>&lt;<span class="cls">Integer</span>&gt; minPQ = <span class="kw">new</span> <span class="cls">PriorityQueue</span>&lt;&gt;();
+
+<span class="cm">// Max-heap (largest first)</span>
+<span class="cls">PriorityQueue</span>&lt;<span class="cls">Integer</span>&gt; maxPQ = 
+  <span class="kw">new</span> <span class="cls">PriorityQueue</span>&lt;&gt;(<span class="cls">Collections</span>.<span class="fn">reverseOrder</span>());
+
+<span class="cm">// Custom comparator (e.g. sort by amount desc)</span>
+<span class="cls">PriorityQueue</span>&lt;<span class="cls">Transaction</span>&gt; pq = 
+  <span class="kw">new</span> <span class="cls">PriorityQueue</span>&lt;&gt;((a, b) -> b.amount - a.amount);
+
+pq.<span class="fn">offer</span>(tx);          <span class="cm">// add</span>
+pq.<span class="fn">poll</span>();             <span class="cm">// remove top</span>
+pq.<span class="fn">peek</span>();             <span class="cm">// view top</span>
+
+<span class="cm">// Top N senders pattern</span>
+<span class="cm">// Build map → convert to PQ → poll N times</span></pre>
+      <div class="note">💡 Use PriorityQueue when you need to repeatedly find the min or max efficiently — like "top N" queries.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="dot java-dot"></div><h2>TreeMap (Sorted Map)</h2></div>
+      <pre><span class="cm">// Sorted by key automatically</span>
+<span class="cls">TreeMap</span>&lt;<span class="cls">String</span>, <span class="cls">Integer</span>&gt; map = <span class="kw">new</span> <span class="cls">TreeMap</span>&lt;&gt;();
+map.<span class="fn">put</span>(<span class="str">"bob"</span>, <span class="num">200</span>);
+map.<span class="fn">put</span>(<span class="str">"alice"</span>, <span class="num">100</span>);
+
+map.<span class="fn">firstKey</span>();        <span class="cm">// "alice" (alphabetically)</span>
+map.<span class="fn">lastKey</span>();         <span class="cm">// "bob"</span>
+
+<span class="cm">// Range queries (e.g. by timestamp)</span>
+<span class="cls">TreeMap</span>&lt;<span class="cls">Long</span>, <span class="cls">Transaction</span>&gt; byTime = <span class="kw">new</span> <span class="cls">TreeMap</span>&lt;&gt;();
+byTime.<span class="fn">subMap</span>(startTs, endTs);   <span class="cm">// transactions in range</span>
+byTime.<span class="fn">headMap</span>(ts);              <span class="cm">// before ts</span>
+byTime.<span class="fn">tailMap</span>(ts);              <span class="cm">// after ts</span></pre>
+      <div class="note">💡 Use TreeMap when you need sorted keys or range queries — e.g. "find all transactions between two timestamps".</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="dot java-dot"></div><h2>Sorting</h2></div>
+      <pre><span class="cm">// Sort list of objects by field</span>
+list.<span class="fn">sort</span>((a, b) -> a.timestamp - b.timestamp);
+
+<span class="cm">// Comparator chaining (multi-field)</span>
+list.<span class="fn">sort</span>(<span class="cls">Comparator</span>
+  .<span class="fn">comparingInt</span>(<span class="cls">Transaction</span>::amount).<span class="fn">reversed</span>()
+  .<span class="fn">thenComparing</span>(tx -> tx.fromAccount));
+
+<span class="cm">// Sort and collect top N</span>
+list.<span class="fn">sort</span>((a, b) -> b.amount - a.amount);
+<span class="type">List</span>&lt;<span class="cls">Transaction</span>&gt; topN = list.<span class="fn">subList</span>(<span class="num">0</span>, Math.<span class="fn">min</span>(n, list.<span class="fn">size</span>()));
+
+<span class="cm">// Natural sort (String, Integer)</span>
+<span class="cls">Collections</span>.<span class="fn">sort</span>(list);
+list.<span class="fn">sort</span>(<span class="cls">String</span>::compareTo);</pre>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="dot java-dot"></div><h2>Rounding & Numbers</h2></div>
+      <pre><span class="cm">// Round to 2 decimal places</span>
+<span class="type">double</span> rounded = <span class="cls">Math</span>.<span class="fn">round</span>(x * <span class="num">100.0</span>) / <span class="num">100.0</span>;
+
+<span class="cm">// Format for display</span>
+<span class="cls">String</span>.<span class="fn">format</span>(<span class="str">"%.2f"</span>, amount);
+
+<span class="cm">// Absolute value</span>
+<span class="cls">Math</span>.<span class="fn">abs</span>(a - b);
+
+<span class="cm">// Currency conversion</span>
+<span class="type">double</span> inUSD = amount / fromRate;
+<span class="type">double</span> converted = inUSD * toRate;
+<span class="cls">Math</span>.<span class="fn">round</span>(converted * <span class="num">100.0</span>) / <span class="num">100.0</span>;
+
+<span class="cm">// Integer division (watch out!)</span>
+<span class="num">5</span> / <span class="num">2</span>     <span class="cm">// = 2 (integer!)</span>
+<span class="num">5.0</span> / <span class="num">2</span>   <span class="cm">// = 2.5 ✅</span></pre>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="dot java-dot"></div><h2>Strings</h2></div>
+      <pre><span class="cm">// Join for CSV</span>
+<span class="cls">String</span>.<span class="fn">join</span>(<span class="str">","</span>, id, from, to, amount);
+
+<span class="cm">// StringBuilder for building reports</span>
+<span class="cls">StringBuilder</span> sb = <span class="kw">new</span> <span class="cls">StringBuilder</span>();
+sb.<span class="fn">append</span>(<span class="str">"=== REPORT ===\n"</span>);
+sb.<span class="fn">append</span>(<span class="cls">String</span>.<span class="fn">format</span>(<span class="str">"Total: %d\n"</span>, n));
+sb.<span class="fn">toString</span>();
+
+<span class="cm">// Common methods</span>
+str.<span class="fn">equals</span>(<span class="str">"completed"</span>)     <span class="cm">// not ==</span>
+str.<span class="fn">contains</span>(<span class="str">"USD"</span>)
+str.<span class="fn">startsWith</span>(<span class="str">"tx"</span>)
+str.<span class="fn">toLowerCase</span>()
+str.<span class="fn">trim</span>()
+str.<span class="fn">split</span>(<span class="str">","</span>)</pre>
+      <div class="note">⚠️ Always use .equals() to compare strings in Java, never ==</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="dot java-dot"></div><h2>Binary Search</h2></div>
+      <pre><span class="cm">// Built-in (array must be sorted)</span>
+<span class="type">int</span>[] arr = {<span class="num">1</span>, <span class="num">3</span>, <span class="num">5</span>, <span class="num">7</span>};
+<span class="type">int</span> idx = <span class="cls">Arrays</span>.<span class="fn">binarySearch</span>(arr, <span class="num">5</span>); <span class="cm">// returns 2</span>
+
+<span class="cm">// Manual implementation</span>
+<span class="type">int</span> <span class="fn">binarySearch</span>(<span class="type">int</span>[] arr, <span class="type">int</span> target) {
+  <span class="type">int</span> lo = <span class="num">0</span>, hi = arr.length - <span class="num">1</span>;
+  <span class="kw">while</span> (lo <= hi) {
+    <span class="type">int</span> mid = lo + (hi - lo) / <span class="num">2</span>;
+    <span class="kw">if</span> (arr[mid] == target) <span class="kw">return</span> mid;
+    <span class="kw">else if</span> (arr[mid] < target) lo = mid + <span class="num">1</span>;
+    <span class="kw">else</span> hi = mid - <span class="num">1</span>;
+  }
+  <span class="kw">return</span> -<span class="num">1</span>;
+}</pre>
+    </div>
+
+    <div class="card full">
+      <div class="card-header"><div class="dot java-dot"></div><h2>Class Design Pattern (Full Template)</h2></div>
+      <pre><span class="kw">class</span> <span class="cls">Transaction</span> {
+  <span class="cls">String</span> id, fromAccount, toAccount, currency, status;
+  <span class="type">double</span> amount;
+  <span class="type">long</span> timestamp;
+
+  <span class="cls">Transaction</span>(<span class="cls">String</span> id, <span class="cls">String</span> from, <span class="cls">String</span> to, <span class="type">double</span> amount,
+               <span class="cls">String</span> currency, <span class="cls">String</span> status, <span class="type">long</span> timestamp) {
+    <span class="kw">this</span>.id = id; <span class="kw">this</span>.fromAccount = from; <span class="kw">this</span>.toAccount = to;
+    <span class="kw">this</span>.amount = amount; <span class="kw">this</span>.currency = currency;
+    <span class="kw">this</span>.status = status; <span class="kw">this</span>.timestamp = timestamp;
+  }
+}
+
+<span class="kw">class</span> <span class="cls">Ledger</span> {
+  <span class="kw">private</span> <span class="type">List</span>&lt;<span class="cls">Transaction</span>&gt; transactions = <span class="kw">new</span> <span class="cls">ArrayList</span>&lt;&gt;();
+  <span class="kw">private</span> <span class="cls">CurrencyConverter</span> converter;  <span class="cm">// nullable</span>
+
+  <span class="cls">Ledger</span>() {}
+  <span class="cls">Ledger</span>(<span class="cls">CurrencyConverter</span> converter) { <span class="kw">this</span>.converter = converter; }
+
+  <span class="type">void</span> <span class="fn">addTransaction</span>(<span class="cls">Transaction</span> tx) { transactions.<span class="fn">add</span>(tx); }
+
+  <span class="cls">Transaction</span> <span class="fn">getTransaction</span>(<span class="cls">String</span> id) {
+    <span class="kw">return</span> transactions.<span class="fn">stream</span>()
+      .<span class="fn">filter</span>(tx -> tx.id.<span class="fn">equals</span>(id))
+      .<span class="fn">findFirst</span>()
+      .<span class="fn">orElse</span>(<span class="kw">null</span>);
+  }
+
+  <span class="type">double</span> <span class="fn">getBalance</span>(<span class="cls">String</span> accountId) {
+    <span class="type">double</span> balance = <span class="num">0</span>;
+    <span class="kw">for</span> (<span class="cls">Transaction</span> tx : transactions) {
+      <span class="kw">if</span> (!tx.status.<span class="fn">equals</span>(<span class="str">"completed"</span>)) <span class="kw">continue</span>;
+      <span class="kw">if</span> (tx.toAccount.<span class="fn">equals</span>(accountId)) balance += tx.amount;
+      <span class="kw">if</span> (tx.fromAccount.<span class="fn">equals</span>(accountId)) balance -= tx.amount;
+    }
+    <span class="kw">return</span> balance;
+  }
+}</pre>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="dot java-dot"></div><h2>Streams (Optional but Useful)</h2></div>
+      <pre><span class="kw">import</span> java.util.stream.*;
+
+<span class="cm">// Filter + collect</span>
+<span class="type">List</span>&lt;<span class="cls">Transaction</span>&gt; completed = transactions.<span class="fn">stream</span>()
+  .<span class="fn">filter</span>(tx -> tx.status.<span class="fn">equals</span>(<span class="str">"completed"</span>))
+  .<span class="fn">collect</span>(<span class="cls">Collectors</span>.<span class="fn">toList</span>());
+
+<span class="cm">// Sum</span>
+<span class="type">double</span> total = transactions.<span class="fn">stream</span>()
+  .<span class="fn">mapToDouble</span>(tx -> tx.amount)
+  .<span class="fn">sum</span>();
+
+<span class="cm">// Sort + limit (top N)</span>
+transactions.<span class="fn">stream</span>()
+  .<span class="fn">sorted</span>((a, b) -> <span class="cls">Double</span>.<span class="fn">compare</span>(b.amount, a.amount))
+  .<span class="fn">limit</span>(n)
+  .<span class="fn">collect</span>(<span class="cls">Collectors</span>.<span class="fn">toList</span>());</pre>
+      <div class="note">💡 Streams are optional — a clean for-loop is always acceptable and sometimes clearer under time pressure.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="dot java-dot"></div><h2>Error Handling</h2></div>
+      <pre><span class="cm">// Throw</span>
+<span class="kw">if</span> (converter == <span class="kw">null</span>)
+  <span class="kw">throw new</span> <span class="cls">IllegalStateException</span>(<span class="str">"No converter"</span>);
+
+<span class="kw">if</span> (!rates.<span class="fn">containsKey</span>(currency))
+  <span class="kw">throw new</span> <span class="cls">IllegalArgumentException</span>(
+    <span class="str">"Unsupported currency: "</span> + currency);
+
+<span class="cm">// Try/catch</span>
+<span class="kw">try</span> {
+  <span class="type">double</span> result = <span class="fn">riskyOperation</span>();
+} <span class="kw">catch</span> (<span class="cls">Exception</span> e) {
+  System.err.<span class="fn">println</span>(e.<span class="fn">getMessage</span>());
+}</pre>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function show(lang) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'))
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'))
+    document.getElementById(lang).classList.add('active')
+    document.querySelector(`.tab.${lang}`).classList.add('active')
+  }
+</script>
+</body>
+</html>
