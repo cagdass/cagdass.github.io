@@ -1,4 +1,131 @@
-<!DOCTYPE html>
+(function() {
+  let running = false, raf, clickLocked = false;
+  let movingEl = null, stackX = null, prevX = null, prevY = null;
+  let samples = [], calibrated = false;
+
+  // Find the element whose position changes each frame
+  function detectMovingElement() {
+    const all = [...document.querySelectorAll('*')];
+    const candidates = all.filter(el => {
+      const s = getComputedStyle(el);
+      const w = el.offsetWidth, h = el.offsetHeight;
+      return (s.position === 'absolute' || s.position === 'fixed')
+        && w > 20 && w < 600 && h > 5 && h < 200
+        && s.animationName !== 'none'
+        && s.display !== 'none';
+    });
+    // Pick the topmost visible one (highest z or shallowest in DOM)
+    return candidates[0] || null;
+  }
+
+  // Fallback: poll all abs elements for actual position changes
+  let snapshot = new Map();
+  function pollForMover() {
+    const els = [...document.querySelectorAll('[style*="left"],[style*="transform"]')]
+      .filter(e => e.offsetWidth > 20 && e.offsetWidth < 600);
+    for (const el of els) {
+      const x = el.getBoundingClientRect().left;
+      const prev = snapshot.get(el);
+      if (prev !== undefined && Math.abs(x - prev) > 1) {
+        snapshot.set(el, x);
+        return el;
+      }
+      snapshot.set(el, x);
+    }
+    return null;
+  }
+
+  // Calibrate: watch the mover for 1 full cycle to find center X
+  function calibrate(el, cb) {
+    console.log('[Bot] Calibrating — watching tile oscillation...');
+    const xs = [];
+    let frames = 0;
+    function sample() {
+      if (!running) return;
+      const r = el.getBoundingClientRect();
+      xs.push(r.left + r.width / 2);
+      frames++;
+      if (frames < 120) { requestAnimationFrame(sample); return; }
+      const minX = Math.min(...xs), maxX = Math.max(...xs);
+      const centerX = (minX + maxX) / 2;
+      console.log(`[Bot] Tile oscillates ${minX.toFixed(0)}px – ${maxX.toFixed(0)}px, center=${centerX.toFixed(0)}px`);
+      cb(centerX);
+    }
+    requestAnimationFrame(sample);
+  }
+
+  // Tolerance in px — lower = stricter alignment needed to click
+  const TOLERANCE = 8;
+
+  function tick() {
+    if (!running) return;
+
+    // Try to find mover if not found yet
+    if (!movingEl) {
+      movingEl = detectMovingElement() || pollForMover();
+      if (!movingEl) { raf = requestAnimationFrame(tick); return; }
+      console.log('[Bot] Found moving element:', movingEl);
+    }
+
+    const r = movingEl.getBoundingClientRect();
+    const cx = r.left + r.width / 2;
+    const cy = r.top + r.height / 2;
+
+    if (!calibrated && stackX === null) {
+      // First pass: calibrate to find center
+      calibrate(movingEl, function(center) {
+        stackX = center;
+        calibrated = true;
+        console.log(`[Bot] Clicking at X=${stackX.toFixed(0)} ± ${TOLERANCE}px`);
+        raf = requestAnimationFrame(tick);
+      });
+      return; // wait for calibration
+    }
+
+    if (calibrated && stackX !== null && !clickLocked) {
+      const diff = Math.abs(cx - stackX);
+      if (diff <= TOLERANCE) {
+        clickLocked = true;
+        // Click the center of the game area at this Y
+        const target = document.elementFromPoint(cx, cy);
+        if (target) {
+          ['pointerdown','mousedown','click','pointerup','mouseup'].forEach(ev =>
+            target.dispatchEvent(new MouseEvent(ev, {bubbles:true, clientX:cx, clientY:cy}))
+          );
+        }
+        console.log(`[Bot] Clicked at x=${cx.toFixed(0)} (diff=${diff.toFixed(1)}px)`);
+        // Re-lock for ~400ms to avoid double clicks
+        setTimeout(() => { clickLocked = false; }, 400);
+      }
+    }
+
+    prevX = cx; prevY = cy;
+    raf = requestAnimationFrame(tick);
+  }
+
+  window.__bot = {
+    start(customX) {
+      running = true;
+      movingEl = null; calibrated = false;
+      if (customX !== undefined) { stackX = customX; calibrated = true; }
+      console.log('[Bot] Starting...');
+      tick();
+    },
+    stop() {
+      running = false;
+      cancelAnimationFrame(raf);
+      console.log('[Bot] Stopped.');
+    },
+    setX(x) {
+      stackX = x;
+      console.log('[Bot] Target X set to', x);
+    },
+    tighten() { /* already at TOLERANCE=8 */ },
+  };
+
+  console.log('%c[Bot] Loaded!', 'color:green;font-weight:bold');
+  console.log('Commands: __bot.start()  |  __bot.stop()  |  __bot.setX(pixels)');
+})();<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
